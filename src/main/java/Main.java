@@ -1,11 +1,7 @@
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Main {
@@ -15,11 +11,9 @@ public class Main {
         try {
 
             ArrayList<Line> lines = new ArrayList<>();
-            TreeSet<Station> stations = new TreeSet<>();
-            HashMap<Line, Station> stationsOnLines = new HashMap<>();
+            //TreeSet<Station> stations = new TreeSet<>();
+            //HashMap<Line, Station> stationsOnLines = new HashMap<>();
             List<Station> connections = new ArrayList();
-
-
 
             Document page = Jsoup.connect("https://ru.wikipedia.org/wiki/Список_станций_Московского_метрополитена")
                             .maxBodySize(0).get();
@@ -40,20 +34,20 @@ public class Main {
                         String lineColor = r.select("td").attr("style").replace("background:", "");
                         String stationName = r.select("td").eq(1).select("a").first().text();
 
+//  System.out.print(r.select("td").eq(3).attr("data-sort-value") + " : "); // connection line number
+//  System.out.print(r.select("td").eq(3).select("span").attr("title")); // connection station
+                        String connectionLineNumber = r.select("td").eq(3).attr("data-sort-value");
+                        String connectionStation = r.select("td").eq(3).select("span").attr("title");
+
+                        if (!connectionLineNumber.equals("Infinity")) {
+                           String[] connectionLines = connectionLineNumber.split(".|0");
+                            System.out.println(connectionLines.);
+                        };
+
                         if (lineColor.length() < HEX_LENGTH)
                             lineColor = "LINE CLOSED";
                         else if (lineColor.length() > HEX_LENGTH)
                                 lineColor = lineColor.substring(70,87);
-
-                        //System.out.print(r.select("td").eq(0).attr("data-sort-value") + " : "); // line number
-
-//                        System.out.print(lineNumber + " : ");
-//                        System.out.print(lineName + " : ");
-//                        System.out.print(lineColor + " : ");
-//                        System.out.print(stationName + " >> " );
-//                        System.out.print(r.select("td").eq(3).attr("data-sort-value") + " : "); // connection line number
-//                        System.out.print(r.select("td").eq(3).select("span").attr("title")); // connection station
-//                        System.out.println();
 
                         if ((lines.isEmpty()) || (!lines.get(lines.size() - 1).getNumber().equals(lineNumber))) {
 
@@ -74,6 +68,8 @@ public class Main {
 
                         lines.get(lines.size() - 1).addStation(station);
 
+
+
                     });
 
             for (Line l : lines) {
@@ -82,23 +78,9 @@ public class Main {
                     System.out.println(s.getName());
             }
 
-
-
-
-
-
-
-
-
-
-//
-//
-//
-//                        System.out.println();
-
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
 
     }
 }
