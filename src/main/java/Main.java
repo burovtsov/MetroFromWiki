@@ -41,7 +41,7 @@ public class Main {
 
                         if (!connectionLineNumber.equals("Infinity")) {
                            String[] connectionLines = connectionLineNumber.split(".|0");
-                            System.out.println(connectionLines. );
+                            System.out.println(connectionLines.);
                         };
 
                         if (lineColor.length() < HEX_LENGTH)
