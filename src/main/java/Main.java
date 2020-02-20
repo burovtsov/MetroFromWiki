@@ -13,16 +13,16 @@ public class Main {
             ArrayList<Line> lines = new ArrayList<>();
             //TreeSet<Station> stations = new TreeSet<>();
             //HashMap<Line, Station> stationsOnLines = new HashMap<>();
-            List<Station> connections = new ArrayList();
+            //List<Station> connections = new ArrayList();
 
             Document page = Jsoup.connect("https://ru.wikipedia.org/wiki/Список_станций_Московского_метрополитена")
                             .maxBodySize(0).get();
 
-            Elements rowsTable1 = page.select("table[class = standard sortable]").eq(0).select("tr");
+            Elements rowsTable1 = page.select("table[class = standard sortable]").eq(0).select("tr"); //Cells of Table 1 "Станции Московского метрополитена"
             rowsTable1.remove(0); //delete Table1 title
-            Elements rowsTable2 = page.select("table[class = standard sortable]").eq(1).select("tr");
+            Elements rowsTable2 = page.select("table[class = standard sortable]").eq(1).select("tr"); //Cells of Table 2 "Станции Московского монорельса"
             rowsTable2.remove(0); //delete Table2 title
-            Elements rowsTable3 = page.select("table[class = standard sortable]").eq(2).select("tr");
+            Elements rowsTable3 = page.select("table[class = standard sortable]").eq(2).select("tr"); //Cells of Table 3 "Платформы Московского центрального кольца"
             rowsTable3.remove(0); //delete Table3 title
 
             rowsTable1.stream()
@@ -36,13 +36,15 @@ public class Main {
 
 //  System.out.print(r.select("td").eq(3).attr("data-sort-value") + " : "); // connection line number
 //  System.out.print(r.select("td").eq(3).select("span").attr("title")); // connection station
-                        String connectionLineNumber = r.select("td").eq(3).attr("data-sort-value");
-                        String connectionStation = r.select("td").eq(3).select("span").attr("title");
+                        //String connectionLineNumber = r.select("td").eq(3).attr("data-sort-value");
+                        //String connectionStation = r.select("td").eq(3).select("span").attr("title");
 
-                        if (!connectionLineNumber.equals("Infinity")) {
-                           String[] connectionLines = connectionLineNumber.split(".|0");
-                            System.out.println(connectionLines.);
-                        };
+                        String connectionLineNumber = r.select("td").eq(3).select("span").text();
+                        //System.out.println("!!!!!!!! " + connectionLineNumber);
+
+
+
+
 
                         if (lineColor.length() < HEX_LENGTH)
                             lineColor = "LINE CLOSED";
@@ -66,6 +68,18 @@ public class Main {
                                 stationName
                         );
 
+
+
+                        if (!connectionLineNumber.equals("Infinity")) {
+                            //String[] connectionLines = connectionLineNumber.split("\\.|0");
+                            String[] connectionLines = connectionLineNumber.split("\\s+");
+
+                            station.setConnections(connectionLines);
+                        }
+
+
+
+
                         lines.get(lines.size() - 1).addStation(station);
 
 
@@ -74,9 +88,21 @@ public class Main {
 
             for (Line l : lines) {
                 System.out.println(l.getNumber() + " >> " + l.getName());
-                    for (Station s : l.getStations())
-                    System.out.println(s.getName());
+                    for (Station s : l.getStations()) {
+                        System.out.println(s.getName());
+                            for (String st : s.getConnections())
+                            System.out.print(st.replaceAll("^0","") + " ");
+                        System.out.println();
+                    }
             }
+
+
+
+
+
+
+
+
 
         } catch (IOException ex) {
             ex.printStackTrace();
