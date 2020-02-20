@@ -13,7 +13,7 @@ public class Main {
             ArrayList<Line> lines = new ArrayList<>();
             //TreeSet<Station> stations = new TreeSet<>();
             //HashMap<Line, Station> stationsOnLines = new HashMap<>();
-            List<Station> connections = new ArrayList();
+            //List<Station> connections = new ArrayList();
 
             Document page = Jsoup.connect("https://ru.wikipedia.org/wiki/Список_станций_Московского_метрополитена")
                             .maxBodySize(0).get();
@@ -39,10 +39,8 @@ public class Main {
                         String connectionLineNumber = r.select("td").eq(3).attr("data-sort-value");
                         String connectionStation = r.select("td").eq(3).select("span").attr("title");
 
-                        if (!connectionLineNumber.equals("Infinity")) {
-                           String[] connectionLines = connectionLineNumber.split(".|0");
-                            System.out.println(connectionLines.);
-                        };
+
+
 
                         if (lineColor.length() < HEX_LENGTH)
                             lineColor = "LINE CLOSED";
@@ -66,6 +64,17 @@ public class Main {
                                 stationName
                         );
 
+
+
+                        if (!connectionLineNumber.equals("Infinity")) {
+                            String[] connectionLines = connectionLineNumber.split("\\.|0");
+
+                            station.setConnections(connectionLines);
+                        }
+
+
+
+
                         lines.get(lines.size() - 1).addStation(station);
 
 
@@ -74,9 +83,21 @@ public class Main {
 
             for (Line l : lines) {
                 System.out.println(l.getNumber() + " >> " + l.getName());
-                    for (Station s : l.getStations())
-                    System.out.println(s.getName());
+                    for (Station s : l.getStations()) {
+                        System.out.println(s.getName());
+                            for (String st : s.getConnections())
+                            System.out.print(st + " ");
+                        System.out.println();
+                    }
             }
+
+
+
+
+
+
+
+
 
         } catch (IOException ex) {
             ex.printStackTrace();
