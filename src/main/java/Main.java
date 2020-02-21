@@ -3,6 +3,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -73,6 +74,13 @@ public class Main {
                         if (!connectionLineNumber.equals("Infinity")) {
                             //String[] connectionLines = connectionLineNumber.split("\\.|0");
                             String[] connectionLines = connectionLineNumber.split("\\s+");
+                            String connectionStation = r.select("td").eq(3).select("span").attr("title").replace("Переход на станцию ","").replaceAll("[а-яА-Я-]+ линии", "");
+
+                          // Arrays.stream(connectionLines).forEach(c -> c.replaceAll("^0", ""));
+
+                            for (String s : connectionLines)
+                                System.out.print(s + " " + connectionStation + " ");
+                            System.out.println();
 
                             station.setConnections(connectionLines);
                         }
@@ -91,7 +99,7 @@ public class Main {
                     for (Station s : l.getStations()) {
                         System.out.println(s.getName());
                             for (String st : s.getConnections())
-                            System.out.print(st.replaceAll("^0","") + " ");
+                            System.out.print(st + " ");
                         System.out.println();
                     }
             }
